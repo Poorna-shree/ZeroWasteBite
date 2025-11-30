@@ -7,7 +7,7 @@ const shopSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: true // change to false if optional
+        required: true
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
@@ -26,6 +26,13 @@ const shopSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
+    // 👉 Add this
+    mobile: {
+        type: String,
+        required: true
+    },
+
     items: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Item"
