@@ -25,15 +25,13 @@ function RequestFood() {
 
   const handleAccept = async (donationId) => {
     try {
-      const res = await axios.put(
+      await axios.put(
         `${serverUrl}/api/donations/accept/${donationId}`,
         {},
         { withCredentials: true }
       );
       alert("Donation accepted successfully!");
-      setDonations((prev) =>
-        prev.filter((donation) => donation._id !== donationId)
-      );
+      setDonations((prev) => prev.filter((donation) => donation._id !== donationId));
     } catch (err) {
       console.error("Error accepting donation:", err);
       alert("Failed to accept donation.");
@@ -79,10 +77,13 @@ function RequestFood() {
                 <FaMapMarkerAlt className="inline text-orange-500 mr-1" />
                 {donation.location}
               </p>
-              <p>
-                <strong>Pickup Date:</strong>{" "}
-                {new Date(donation.pickupDate).toLocaleDateString()}
-              </p>
+             <p>
+  <strong>Pickup Date:</strong>{" "}
+  {donation.pickupDate
+    ? new Date(donation.pickupDate).toLocaleDateString("en-GB")
+    : "Date not available"}
+</p>
+
               <p>
                 <strong>Donor Contact:</strong>{" "}
                 <FaPhoneAlt className="inline text-orange-500 mr-1" />

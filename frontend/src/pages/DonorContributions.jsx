@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaArrowLeft, FaPhoneAlt, FaMapMarkerAlt, FaBox } from "react-icons/fa";
+import { FaArrowLeft, FaPhoneAlt, FaMapMarkerAlt, FaBox, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function DonorContributions() {
@@ -23,21 +23,20 @@ function DonorContributions() {
   }, []);
 
   const handleDelete = async (donationId) => {
-  if (!window.confirm("Are you sure you want to delete this donation?")) return;
+    if (!window.confirm("Are you sure you want to delete this donation?")) return;
 
-  try {
-    await axios.delete(`${serverUrl}/api/donations/delete/${donationId}`, {
-      withCredentials: true,
-    });
+    try {
+      await axios.delete(`${serverUrl}/api/donations/delete/${donationId}`, {
+        withCredentials: true,
+      });
 
-    alert("Donation deleted successfully.");
-    setDonations((prev) => prev.filter((d) => d._id !== donationId)); // remove from UI
-  } catch (err) {
-    console.error("Error deleting donation:", err);
-    alert("Failed to delete donation.");
-  }
-};
-
+      alert("Donation deleted successfully.");
+      setDonations((prev) => prev.filter((d) => d._id !== donationId)); // remove from UI
+    } catch (err) {
+      console.error("Error deleting donation:", err);
+      alert("Failed to delete donation.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-green-50 p-6 flex flex-col items-center">
@@ -67,15 +66,23 @@ function DonorContributions() {
                 <h3 className="text-xl font-semibold text-green-700 flex items-center gap-2">
                   <FaBox /> {donation.foodType}
                 </h3>
-                <span
-                  className={`px-3 py-1 rounded-full text-white ${
-                    donation.status === "Collected"
-                      ? "bg-green-600"
-                      : "bg-yellow-500"
-                  }`}
-                >
-                  {donation.status}
-                </span>
+                <div className="flex gap-2">
+                  <span
+                    className={`px-3 py-1 rounded-full text-white ${
+                      donation.status === "Collected" ? "bg-green-600" : "bg-yellow-500"
+                    }`}
+                  >
+                    {donation.status}
+                  </span>
+
+                  {/* Delete button */}
+                  <button
+                    onClick={() => handleDelete(donation._id)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-xl flex items-center gap-1 transition"
+                  >
+                    <FaTrash /> Delete
+                  </button>
+                </div>
               </div>
 
               <p>
@@ -91,25 +98,23 @@ function DonorContributions() {
                 <strong>Quantity:</strong> {donation.quantity}
               </p>
 
-      <div className="border-t pt-3 mt-2">
-  <h4 className="font-semibold text-green-700">Receiver Details</h4>
-  {donation.status === "Collected" ? (
-    <>
-      <p>
-        <strong>Name:</strong> {donation.receiverName || "N/A"}
-      </p>
-      <p>
-        <strong>Phone:</strong>{" "}
-        <FaPhoneAlt className="inline text-green-500 mr-1" />
-        {donation.receiverPhone || "N/A"}
-      </p>
-    </>
-  ) : (
-    <p className="text-gray-500 italic">Not yet collected</p>
-  )}
-</div>
-
-
+              <div className="border-t pt-3 mt-2">
+                <h4 className="font-semibold text-green-700">Receiver Details</h4>
+                {donation.status === "Collected" ? (
+                  <>
+                    <p>
+                      <strong>Name:</strong> {donation.receiverName || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Phone:</strong>{" "}
+                      <FaPhoneAlt className="inline text-green-500 mr-1" />
+                      {donation.receiverPhone || "N/A"}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-gray-500 italic">Not yet collected</p>
+                )}
+              </div>
             </div>
           ))}
         </div>

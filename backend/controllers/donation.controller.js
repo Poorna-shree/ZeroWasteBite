@@ -29,7 +29,7 @@ export const createDonation = async (req, res) => {
       foodType,
       quantity,
       location,
-      pickupDate,
+       pickupDate: new Date(pickupDate),  // ✅ FIXED
       description,
       status: "Available",
     });
@@ -60,7 +60,7 @@ export const getAllDonations = async (req, res) => {
   try {
     const donations = await Donation.find({ status: "Available" })
       .sort({ createdAt: -1 })
-      .select("foodType quantity location donorName donorPhone createdAt status");
+      .select("foodType quantity location donorName donorPhone pickupDate createdAt status");
 
     res.status(200).json({
       success: true,

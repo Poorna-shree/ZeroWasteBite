@@ -9,6 +9,11 @@ function MyOrders() {
   const { userData, myOrders } = useSelector(state => state.user)
   const navigate = useNavigate()
 
+  // Filter out delivered orders
+  const filteredOrders = myOrders?.filter(
+    order => order?.shopOrders?.status !== "delivered"
+  )
+
   return (
     <div className='w-full min-h-screen bg-[#fff9f6] flex justify-center px-4'>
       <div className='w-full max-w-[800px] p-4'>
@@ -23,8 +28,8 @@ function MyOrders() {
         </div>
 
         <div className='space-y-6'>
-          {myOrders && myOrders.length > 0 ? (
-            myOrders.map(order =>
+          {filteredOrders && filteredOrders.length > 0 ? (
+            filteredOrders.map(order =>
               userData?.role === "user" ? (
                 <UserOrderCard data={order} key={order._id} />
               ) : userData?.role === "owner" ? (

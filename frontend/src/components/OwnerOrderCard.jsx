@@ -9,8 +9,11 @@ function OwnerOrderCard({ data }) {
   const [availableBoys, setAvailableBoys] = useState([]);
   const dispatch = useDispatch();
 
+  // Skip rendering if order is delivered
+  if (data?.shopOrders?.status === "delivered") return null;
+
   const handleUpdateStatus = async (orderId, shopId, status) => {
-    if (!status) return; // prevent empty selection
+    if (!status) return;
 
     try {
       const result = await axios.post(
@@ -19,10 +22,8 @@ function OwnerOrderCard({ data }) {
         { withCredentials: true }
       );
 
-      // ✅ Update Redux state instantly (real-time UI change)
       dispatch(updateOrdersStatus({ orderId, shopId, status }));
       setAvailableBoys(result?.data?.availableBoys || []);
-      console.log(result.data);
     } catch (error) {
       console.error("Status update failed:", error);
     }

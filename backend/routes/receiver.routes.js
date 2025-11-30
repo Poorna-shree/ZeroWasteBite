@@ -9,37 +9,41 @@ const router = express.Router();
 // POST /api/receiver/update-profile
 router.post(
   "/update-profile",
-  isAuth, // ✅ auth middleware
+  isAuth,
   upload.single("image"),
   async (req, res) => {
     try {
-      const { fullName, email, mobile, address, organization } = req.body;
+      const { fullName, email, mobile, address, city, state } = req.body;
+
       const image = req.file ? `/uploads/${req.file.filename}` : null;
 
       let receiver = await Receiver.findOne({ user: req.userId });
 
       if (!receiver) {
-        // create new receiver
+        // CREATE new receiver
         receiver = new Receiver({
           user: req.userId,
           fullName,
           email,
           mobile,
           address,
-          organization,
+          city,
+          state,
           image,
         });
       } else {
-        // update existing
-        receiver.fullName = fullName;
-        receiver.email = email;
-        receiver.mobile = mobile;
-        receiver.address = address;
-        receiver.organization = organization;
+        // UPDATE existing
+        receiver.fullName = fullName ?? receiver.fullName;
+        receiver.email = email ?? receiver.email;
+        receiver.mobile = mobile ?? receiver.mobile;
+        receiver.address = address ?? receiver.address;
+        receiver.city = city ?? receiver.city;
+        receiver.state = state ?? receiver.state;
         if (image) receiver.image = image;
       }
 
-      await receiver.save();
+      await receiver.save(); // REQUIRED fields must be present
+
       res.status(200).json(receiver);
     } catch (err) {
       console.error("Receiver update error:", err);
@@ -52,7 +56,9 @@ router.post(
 router.get("/get-my", isAuth, async (req, res) => {
   try {
     const receiver = await Receiver.findOne({ user: req.userId });
-    if (!receiver) return res.status(404).json({ message: "Receiver not found" });
+    if (!receiver)
+      return res.status(404).json({ message: "Receiver not found" });
+
     res.status(200).json(receiver);
   } catch (err) {
     console.error("Get receiver error:", err);

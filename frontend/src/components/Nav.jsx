@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { FaLocationDot } from "react-icons/fa6";
 import { IoIosSearch } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
@@ -11,10 +11,8 @@ import { FaPlus } from "react-icons/fa6";
 import { TbReceipt2 } from "react-icons/tb";
 import { useNavigate } from 'react-router-dom';
 
-
-
 function Nav() {
-    const { userData, currentCity, cartItems } = useSelector(state => state.user);
+    const { userData, currentCity, cartItems, myOrders } = useSelector(state => state.user);
     const { myShopData } = useSelector(state => state.owner);
     const [showInfo, setShowInfo] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
@@ -24,7 +22,7 @@ function Nav() {
 
     const handleLogOut = async () => {
         try {
-            const result = await axios.get(`${serverUrl}/api/auth/signout`, { withCredentials: true });
+            await axios.get(`${serverUrl}/api/auth/signout`, { withCredentials: true });
             dispatch(setUserData(null));
         } catch (error) {
             console.log(error);
@@ -41,17 +39,16 @@ function Nav() {
     };
 
     useEffect(() => {
-        if (query) {
-            handleSearchItems();
-        } else {
-            dispatch(setSearchItems(null));
-        }
+        if (query) handleSearchItems();
+        else dispatch(setSearchItems(null));
     }, [query]);
+
+    // Filter out delivered orders for badge
+    const activeOrders = myOrders?.filter(order => order.shopOrders?.status !== "delivered") || [];
 
     return (
         <div className='w-full h-[80px] flex items-center justify-between md:justify-center gap-[30px] px-[20px] fixed top-0 z-[9999] bg-[#fff9f6] overflow-visible'>
-
-            {showSearch && userData.role == "user" && (
+            {showSearch && userData.role === "user" && (
                 <div className='w-[90%] h-[70px] bg-white shadow-xl rounded-lg items-center gap-[20px] flex fixed top-[80px] left-[5%] md:hidden'>
                     <div className='flex items-center w-[30%] overflow-hidden gap-[10px] px-[10px] border-r-[2px] border-gray-400'>
                         <FaLocationDot size={25} className="text-[#ff4d2d]" />
@@ -71,7 +68,7 @@ function Nav() {
 
             <h1 className='text-3xl font-bold mb-2 text-[#ff4d2d]'>ZeroWasteBite</h1>
 
-            {userData.role == "user" && (
+            {userData.role === "user" && (
                 <div className='md:w-[60%] lg:w-[40%] h-[70px] bg-white shadow-xl rounded-lg items-center gap-[20px] hidden md:flex'>
                     <div className='flex items-center w-[30%] overflow-hidden gap-[10px] px-[10px] border-r-[2px] border-gray-400'>
                         <FaLocationDot size={25} className="text-[#ff4d2d]" />
@@ -92,7 +89,7 @@ function Nav() {
             {/* Right Section */}
             <div className='flex items-center gap-4'>
 
-                {userData.role == "user" && (
+                {userData.role === "user" && (
                     showSearch ? (
                         <RxCross2 size={25} className='text-[#ff4d2d] md:hidden' onClick={() => setShowSearch(false)} />
                     ) : (
@@ -100,19 +97,19 @@ function Nav() {
                     )
                 )}
 
-                {userData.role == "owner" ? (
+                {userData.role === "owner" ? (
                     <>
                         {myShopData && (
                             <>
                                 <button
-                                    className=' hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]'
+                                    className='hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]'
                                     onClick={() => navigate("/add-item")}
                                 >
                                     <FaPlus size={20} />
                                     <span>Add items</span>
                                 </button>
                                 <button
-                                    className=' md:hidden flex items-center p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]'
+                                    className='md:hidden flex items-center p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]'
                                     onClick={() => navigate("/add-item")}
                                 >
                                     <FaPlus size={20} />
@@ -120,37 +117,41 @@ function Nav() {
                             </>
                         )}
 
-                        {/* Hide My Orders for ReduceWasteVolunteer */}
-                        {userData.role !== "reduceWasteVolunteer" && (
+                        {/* My Orders for owners (exclude reduceWasteVolunteer & deliveryBoy) */}
+                        {userData.role !== "reduceWasteVolunteer" && userData.role !== "deliveryBoy" && (
                             <>
                                 <div className='hidden md:flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-1g bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium'
                                     onClick={() => navigate("/my-orders")}
                                 >
                                     <TbReceipt2 size={20} />
                                     <span>My Orders</span>
-                                    <span className='absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]'>0</span>
+                                    <span className='absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]'>
+                                        {activeOrders.length}
+                                    </span>
                                 </div>
 
                                 <div className='md:hidden flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-1g bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium'
                                     onClick={() => navigate("/my-orders")}
                                 >
                                     <TbReceipt2 size={20} />
-                                    <span className='absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]'>0</span>
+                                    <span className='absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]'>
+                                        {activeOrders.length}
+                                    </span>
                                 </div>
                             </>
                         )}
                     </>
                 ) : (
                     <>
-                        {userData.role == "user" && (
+                        {userData.role === "user" && (
                             <div className='relative cursor-pointer' onClick={() => navigate("/cart")}>
                                 <FiShoppingCart size={25} className='text-[#ff4d2d]' />
                                 <span className='absolute right-[-9px] top-[-12px] text-[#ff4d2d]'>{cartItems?.length || 0}</span>
                             </div>
                         )}
 
-                        {/* Hide My Orders for ReduceWasteVolunteer */}
-                        {userData.role !== "reduceWasteVolunteer" && (
+                        {/* My Orders button (exclude reduceWasteVolunteer & deliveryBoy) */}
+                        {userData.role !== "reduceWasteVolunteer" && userData.role !== "deliveryBoy" && (
                             <button
                                 className='hidden md:block px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium'
                                 onClick={() => navigate("/my-orders")}
@@ -172,16 +173,17 @@ function Nav() {
                 {/* Dropdown Info */}
                 {showInfo && (
                     <div
-                        className={`fixed top-[80px] right-[10px] ${
-                            userData.role == "deliveryBoy"
+                        className={`fixed top-[80px] right-[10px] ${userData.role === "deliveryBoy"
                                 ? "md:right-[10%] lg:right-[25%]"
                                 : "md:right-[20%] lg:right-[40%]"
-                        } w-[180px] bg-white shadow-2xl rounded-xl p-[20px] flex flex-col gap-[10px] z-[9999]`}
+                            } w-[180px] bg-white shadow-2xl rounded-xl p-[20px] flex flex-col gap-[10px] z-[9999]`}
                     >
-                        <div className='text-[17px] font-semibold  cursor-pointer' onClick={() => navigate("/home")}>{userData?.fullName}</div>
+                        <div className='text-[17px] font-semibold cursor-pointer' onClick={() => navigate("/home")}>
+                            {userData?.fullName}
+                        </div>
 
-                        {/* Hide My Orders for ReduceWasteVolunteer */}
-                        {userData.role == "user" && userData.role !== "reduceWasteVolunteer" && (
+                        {/* My Orders in dropdown (exclude reduceWasteVolunteer & deliveryBoy) */}
+                        {userData.role !== "reduceWasteVolunteer" && userData.role !== "deliveryBoy" && userData.role === "user" && (
                             <div className='md:hidden text-[#ff4d2d] font-semibold cursor-pointer' onClick={() => navigate("/my-orders")}>
                                 My Orders
                             </div>
@@ -194,7 +196,7 @@ function Nav() {
                 )}
             </div>
         </div>
-    )
+    );
 }
 
-export default Nav
+export default Nav;
