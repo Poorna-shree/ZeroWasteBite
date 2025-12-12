@@ -4,23 +4,29 @@ dotenv.config();
 
 
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  port: 465,
-  secure: true,
+  service: "gmail",
+  port: 587,
+  secure: false, // use STARTTLS
   auth: {
     user: process.env.EMAIL,
-    pass: process.env.PASS,
+    pass: process.env.PASS,  // Gmail App Password
   },
 });
 
 // Send OTP for password reset
 export const sendOtpMAil = async (to, otp) => {
-  await transporter.sendMail({
-    from: process.env.EMAIL,
-    to: user.email,
-    subject: "Reset your Password",
-    html: `<p>Your OTP for password reset is <b>${otp}</b>. It expires in 5 minutes.</p>`,
-  });
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL,
+      to: to,   // ✅ use the function argument
+      subject: "Reset your Password",
+      html: `<p>Your OTP for password reset is <b>${otp}</b>. It expires in 5 minutes.</p>`,
+    });
+    console.log(`✅ OTP sent to ${to}`);
+  } catch (err) {
+    console.error(`❌ Send OTP failed: ${err}`);
+    throw err;  // rethrow to be handled in the API route
+  }
 };
 
 
@@ -31,12 +37,17 @@ export const sendOtpMAil = async (to, otp) => {
 
 // Send delivery OTP
 export const sendDeliveryOtpMail = async (user, otp) => {
-  await transporter.sendMail({
-    from: process.env.EMAIL,
-    to: user.email,
-    subject: "Delivery OTP",
-    html: `<p>Your OTP for delivery is <b>${otp}</b>. It expires in 5 minutes.</p>`,
-  });
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL,
+      to: user.email,
+      subject: "Delivery OTP",
+      html: `<p>Your OTP for delivery is <b>${otp}</b>. It expires in 5 minutes.</p>`,
+    });
+    console.log(`✅ Delivery OTP sent to ${user.email}`);
+  } catch (err) {
+    console.error(`❌ Delivery OTP error: ${err}`);
+  }
 };
 
 // Send new order notification to shop owner
