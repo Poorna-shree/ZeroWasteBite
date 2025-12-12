@@ -13,7 +13,7 @@ import { ArrowLeft } from "lucide-react"; // 👈 Back icon
 import { authDataContext } from "../context/AuthContext";
 
 function SignUp() {
-  const { serverUrl } = useContext(authDataContext);
+  
 
   // 🌿 Green theme
   const primaryColor = "#22c55e";
