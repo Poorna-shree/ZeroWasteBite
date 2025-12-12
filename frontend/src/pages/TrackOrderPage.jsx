@@ -36,6 +36,9 @@ function TrackOrderPage() {
                 <div className='bg-white p-4 rounded-2xl shadow-md border border-orange-200 space-y-4' key={index}>
                     <div>
                         <p className='text-lg font-bold mb-2 text-[#ff4d2d]'>{shopOrder.shop.name}</p>
+                        <p className='font-semibold'><span>Shop Contact: </span>{shopOrder.shop.mobile}</p>
+
+                       
                         <p className='font-semibold'><span>Items:</span>{shopOrder.shopOrderItems?.map(i=>i.name).join(",")}</p>
                         <p><span className='font-semibold'>Subtotal:</span> {shopOrder.subtotal}</p>
                         <p className='mt-6'><span className='font-semibold'>Delivery address:</span> {currentOrder.deliveryAddress?.text} </p>
