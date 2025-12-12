@@ -12,7 +12,7 @@ import { ArrowLeft } from "lucide-react";
 import { authDataContext } from "../context/AuthContext";
 
 function SignUp() {
-  const { serverUrl } = useContext(authDataContext);
+  const { serverUrl } = useContext("https://zerowastebite-backend.onrender.com");
 
   const primaryColor = "#22c55e";
   const hoverColor = "#16a34a";
