@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
+  service: "zerowastebite@gmail.com",
   port: 465,
   secure: true,
   auth: {
@@ -11,6 +11,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.PASS,
   },
 });
+
 
 // Send OTP for password reset
 export const sendOtpMAil = async (to, otp) => {
