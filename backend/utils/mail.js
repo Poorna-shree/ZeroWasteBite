@@ -4,30 +4,32 @@ dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false, // use TLS
   auth: {
-    user: process.env.EMAIL,  
-    pass: process.env.PASS,   // Gmail APP PASSWORD (not your Gmail password)
+    user: process.env.EMAIL,
+    pass: process.env.PASS,
   },
 });
 
 
 
-export const sendOtpMAil = async (to, otp) => {
+
+
+export const sendDeliveryOtpMail = async (user, otp) => {
   try {
-    console.log("📩 Sending email to:", to);   // DEBUG
     await transporter.sendMail({
       from: process.env.EMAIL,
-      to,
-      subject: "Reset your Password",
-      html: `<p>Your OTP is <b>${otp}</b></p>`,
+      to: user.email,
+      subject: "Delivery OTP",
+      html: `<p>Your OTP for delivery is <b>${otp}</b>. It expires in 5 minutes.</p>`,
     });
-    console.log("✅ Email sent successfully");
+    console.log("✅ Delivery OTP sent to", user.email);
   } catch (err) {
-    console.log("❌ Email error:", err);       // SHOW REAL ERROR
+    console.error("❌ Delivery OTP error:", err);
   }
 };
+
 
 
 // Send delivery OTP
