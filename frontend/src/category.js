@@ -1,4 +1,4 @@
-import carrot from "./assets/Carrot.png";  // one common image
+import carrot from "./assets/carrot.png";  // one common image
 import tomoto from "./assets/Tomoto.jpg";
 import onion from "./assets/Onion.jpg";
 import chilli from "./assets/Chilli.jpg";
