@@ -27,7 +27,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://zerowastebite-kfr4.onrender.com",
     credentials: true,
     methods: ["POST", "GET"],
   },
@@ -40,7 +40,7 @@ const port = process.env.PORT || 5000;
 // CORS
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://zerowastebite-kfr4.onrender.com",
     credentials: true,
   })
 );
