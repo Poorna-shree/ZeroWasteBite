@@ -30,7 +30,7 @@ import useGetMyOrders from './hooks/useGetMyOrders';
 import useUpdateLocation from './hooks/useUpdateLocation';
 import DonorProfile from './pages/DonorProfile';
 import DonorDashboard from './pages/DonorDashboard ';
-import FoodDonate from './pages/fooddonate';
+import FoodDonate from './pages/FoodDonate';
 import { io } from 'socket.io-client';
 import { setSocket } from './redux/userSlice';
 import useGetMyDonor from './hooks/useGetMyDonor';
