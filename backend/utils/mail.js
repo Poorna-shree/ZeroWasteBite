@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 
 
 
-const sendOtpMAil = async (to, otp) => {
+export const sendOtpMAil = async (to, otp) => {
   try {
     console.log("📩 Sending email to:", to);   // DEBUG
     await transporter.sendMail({
