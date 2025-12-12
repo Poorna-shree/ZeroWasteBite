@@ -40,7 +40,7 @@ import RequestFood from "./pages/RequestFood"; // ✅ import this
 import MyRequests from './pages/MyRequests';
 import NewsFeed from './components/NewsFeed';
 import Homee from './pages/Homee';
-export const serverUrl = "https://zerowastebite-backend.onrender.com";
+export const serverUrl = "https://zwb-backend.onrender.com";
 
 function App() {
   const { userData } = useSelector(state => state.user);
