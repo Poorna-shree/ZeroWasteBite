@@ -3,17 +3,19 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { serverUrl } from "../App";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react"; // 👈 Back icon
 import { authDataContext } from "../context/AuthContext";
 
 function SignUp() {
-  const { serverUrl } = useContext("https://zerowastebite-backend.onrender.com");
+  const { serverUrl } = useContext(authDataContext);
 
+  // 🌿 Green theme
   const primaryColor = "#22c55e";
   const hoverColor = "#16a34a";
   const bgColor = "#f6fff9";
@@ -31,7 +33,7 @@ function SignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Manual signup
+  // 🌱 Handle manual signup
   const handleSignUp = async () => {
     setLoading(true);
     try {
@@ -43,21 +45,20 @@ function SignUp() {
       dispatch(setUserData(result.data));
       setErr("");
       setLoading(false);
-      navigate("/"); // Navigate after successful signup
+      // navigate("/");
     } catch (error) {
       setErr(error?.response?.data?.message || "Signup failed");
       setLoading(false);
     }
   };
 
-  // Google signup
+  // 🔐 Handle Google sign-up
   const handleGoogleAuth = async () => {
     if (!mobile) return setErr("Mobile number is required before Google sign-up");
 
     const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
     try {
-      const result = await signInWithPopup(auth, provider);
-
       const { data } = await axios.post(
         `${serverUrl}/api/auth/google-auth`,
         {
@@ -70,7 +71,7 @@ function SignUp() {
       );
 
       dispatch(setUserData(data));
-      navigate("/"); // Navigate after Google signup
+      // navigate("/");
     } catch (error) {
       console.log(error);
       setErr("Google Sign-Up failed");
@@ -86,7 +87,7 @@ function SignUp() {
         className="bg-white rounded-xl shadow-lg w-full max-w-md p-8 border relative"
         style={{ border: `1px solid ${borderColor}` }}
       >
-        {/* Back button */}
+        {/* 👈 Back button */}
         <button
           onClick={() => navigate("/")}
           className="absolute top-4 left-4 flex items-center gap-1 text-green-700 hover:text-green-900 font-medium transition-colors"
@@ -95,6 +96,7 @@ function SignUp() {
           Back
         </button>
 
+        {/* Title */}
         <h1
           className="text-3xl font-bold mb-2 mt-8 text-center"
           style={{ color: primaryColor }}
