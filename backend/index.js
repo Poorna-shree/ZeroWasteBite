@@ -27,7 +27,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://zerowastebite-kfr4.onrender.com",
+    origin: "https://zwb.onrender.com",
     credentials: true,
     methods: ["POST", "GET"],
   },
@@ -40,7 +40,7 @@ const port = process.env.PORT || 5000;
 // CORS
 app.use(
   cors({
-    origin: "https://zerowastebite-kfr4.onrender.com",
+    origin: "https://zwb.onrender.com",
     credentials: true,
   })
 );
