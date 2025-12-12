@@ -3,14 +3,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: "zerowastebite@gmail.com",
+  host: "smtp.gmail.com",
   port: 465,
   secure: true,
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASS,
+    user: process.env.EMAIL,  
+    pass: process.env.PASS,   // Gmail APP PASSWORD (not your Gmail password)
   },
 });
+
 
 
 // Send OTP for password reset
