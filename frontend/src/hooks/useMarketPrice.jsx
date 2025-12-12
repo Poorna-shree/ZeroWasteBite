@@ -13,7 +13,7 @@ export default function useMarketPrice(category, state, district) {
 
       setLoading(true);
       try {
-        const res = await axios.get("http://localhost:8000/api/market-price", {
+        const res = await axios.get("https://zwb-backend.onrender.com/api/market-price", {
           params: { crop: category, state, district },
         });
 
